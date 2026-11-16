@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Appointment - Doctor Appointment System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="patient_styles.css">
+</head>
+<body class="form-page" style="align-items: flex-start;">
+    <nav class="navbar" style="position: absolute; width: 100%; top: 0;">
+        <div class="container nav-container">
+            <a href="patient_landing.html" class="logo">
+                <i class="ph-fill ph-heartbeat"></i>
+                <span>MedBook</span>
+            </a>
+            <div class="nav-links">
+                <a href="doctors.html" class="nav-link">&larr; Back to Doctors</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="form-card large" style="margin-top: 120px;">
+        <h2>Book an Appointment</h2>
+        <form id="bookForm">
+            <div class="form-group">
+                <label for="doctorName">Selected Doctor</label>
+                <input type="text" id="doctorName" readonly>
+            </div>
+            <div class="form-group">
+                <label for="patientName">Your Name</label>
+                <input type="text" id="patientName" readonly>
+            </div>
+            <div class="form-group">
+                <label for="appointmentDate">Appointment Date & Time</label>
+                <input type="datetime-local" id="appointmentDate" required>
+            </div>
+            <div class="form-group">
+                <label for="reason">Reason for Visit</label>
+                <textarea id="reason" rows="4" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary btn-large">Confirm Booking</button>
+        </form>
+    </div>
+
+    <script>
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (!user) {
+            window.location.href = 'login.html';
+        }
+
+        document.getElementById('patientName').value = user.name;
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const doctor = urlParams.get('doctor');
+        if(doctor) {
+            document.getElementById('doctorName').value = doctor;
+        } else {
+            alert("Please select a doctor first.");
+            window.location.href = 'doctors.html';
+        }
+
+        document.getElementById('bookForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const payload = {
+                patient_id: user.id,
+                patient_name: user.name,
+                doctor_name: document.getElementById('doctorName').value,
+                appointment_date: document.getElementById('appointmentDate').value,
+                reason: document.getElementById('reason').value
+            };
+
+            try {
+                const res = await fetch('api/appointments.php', {
+                    method: 'POST',
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json();
+                if(data.status === 'success') {
+                    alert('Appointment booked successfully!');
+                    window.location.href = 'appointments.html';
+                } else {
+                    alert(data.message);
+                }
+            } catch(err) {
+                alert('Connection failed');
+            }
+        });
+    </script>
+</body>
+</html>

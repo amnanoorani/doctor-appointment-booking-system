@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Doctor Appointment System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="patient_styles.css">
+</head>
+<body class="auth-page">
+    <div class="auth-card">
+        <h2>Patient Login</h2>
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" required>
+            </div>
+            <button type="submit" class="btn btn-primary btn-large">Login</button>
+        </form>
+        <div class="auth-links">
+            <p>Don't have an account? <a href="register.html">Register here</a></p>
+            <p style="margin-top: 12px;"><a href="admin_login.html" style="color: var(--text-muted);">Admin Login</a></p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                const res = await fetch('api/login.php', {
+                    method: 'POST',
+                    body: JSON.stringify({email, password})
+                });
+                const data = await res.json();
+                if(data.status === 'success' && data.user.role === 'patient') {
+                    localStorage.setItem('user', JSON.stringify(data.user));
+                    window.location.href = 'patient_landing.html';
+                } else {
+                    alert(data.message || 'Invalid credentials or role.');
+                }
+            } catch(err) {
+                alert('Connection failed');
+            }
+        });
+    </script>
+</body>
+</html>

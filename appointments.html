@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Appointments - Doctor Appointment System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="patient_styles.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="patient_landing.html" class="logo">
+                <i class="ph-fill ph-heartbeat"></i>
+                <span>MedBook</span>
+            </a>
+            <div class="nav-links">
+                <a href="patient_landing.html" class="nav-link">Home</a>
+                <a href="doctors.html" class="nav-link">Doctors</a>
+                <a href="appointments.html" class="nav-link">My Appointments</a>
+                <a href="contact.html" class="nav-link">Contact</a>
+                <button onclick="logout()" class="btn btn-secondary">Logout</button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="page-header">
+        <div class="container">
+            <h1>My Appointments</h1>
+            <p>View the status of your past and upcoming appointments.</p>
+        </div>
+    </div>
+
+    <section class="grid-section">
+        <div class="container" id="appointmentsList" style="max-width: 800px; margin: 0 auto;">
+            <!-- Populated via JS -->
+        </div>
+    </section>
+
+    <script>
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (!user) {
+            window.location.href = 'login.html';
+        }
+
+        const logout = () => {
+            localStorage.removeItem('user');
+            window.location.href = 'login.html';
+        }
+
+        const loadAppointments = async () => {
+            try {
+                const res = await fetch(`api/appointments.php?patient_id=${user.id}`);
+                const data = await res.json();
+                
+                const list = document.getElementById('appointmentsList');
+                if(data.status === 'success' && data.data.length > 0) {
+                    list.innerHTML = '';
+                    data.data.forEach(apt => {
+                        const date = new Date(apt.appointment_date).toLocaleString();
+                        list.innerHTML += `
+                            <div class="apt-card">
+                                <div>
+                                    <h3 style="margin-bottom: 4px;">${apt.doctor_name}</h3>
+                                    <p style="color: var(--text-muted); font-size: 0.9rem;">${date}</p>
+                                    <p style="margin-top: 8px;">Reason: ${apt.reason}</p>
+                                </div>
+                                <span class="apt-badge badge-${apt.status}">${apt.status}</span>
+                            </div>
+                        `;
+                    });
+                } else {
+                    list.innerHTML = '<p style="text-align:center;">You have no appointments booked yet.</p>';
+                }
+            } catch(e) {
+                console.error("Failed to load appointments");
+            }
+        };
+
+        loadAppointments();
+    </script>
+</body>
+</html>

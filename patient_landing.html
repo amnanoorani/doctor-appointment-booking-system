@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Appointment System - Home</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="patient_styles.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="#" class="logo">
+                <i class="ph-fill ph-heartbeat"></i>
+                <span>Doctor Appointment System</span>
+            </a>
+            <div class="nav-links">
+                <div id="authLinks">
+                    <a href="login.html" class="nav-link">Login</a>
+                    <a href="register.html" class="btn btn-primary">Register</a>
+                </div>
+                <div id="userLinks" style="display: none; align-items: center; gap: 24px;">
+                    <a href="doctors.html" class="nav-link">Doctors</a>
+                    <a href="appointments.html" class="nav-link">My Appointments</a>
+                    <button onclick="logout()" class="btn btn-secondary">Logout</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container hero-content">
+            <h1>Welcome to Doctor Appointment System</h1>
+            <p>Book appointments with experienced doctors easily and manage your healthcare appointments all in one place.</p>
+            <a href="doctors.html" class="btn btn-large btn-light">Book Appointment Now</a>
+        </div>
+    </section>
+
+    <!-- Why Choose Us Section -->
+    <section class="features">
+        <div class="container">
+            <div class="features-grid">
+                <!-- Card 1 -->
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="ph-fill ph-stethoscope"></i>
+                    </div>
+                    <h3>Expert Doctors</h3>
+                    <p>Highly qualified and experienced medical professionals</p>
+                </div>
+                <!-- Card 2 -->
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="ph-fill ph-calendar-check"></i>
+                    </div>
+                    <h3>Easy Booking</h3>
+                    <p>Simple and fast appointment booking process</p>
+                </div>
+                <!-- Card 3 -->
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="ph-fill ph-headset"></i>
+                    </div>
+                    <h3>24/7 Support</h3>
+                    <p>Round the clock customer support for your needs</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Secure Section -->
+    <section class="secure-section">
+        <div class="container">
+            <div class="secure-card">
+                <div class="secure-icon">
+                    <i class="ph-fill ph-shield-check"></i>
+                </div>
+                <h3>Secure & Private</h3>
+                <p>Your health data is completely secure with us</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pre-Footer CTA -->
+    <section class="cta-section">
+        <div class="container cta-content">
+            <h2>Ready to Book Your Appointment?</h2>
+            <p>Browse our list of qualified doctors and schedule your appointment today.</p>
+            <div class="cta-buttons">
+                <a href="doctors.html" class="btn btn-primary btn-large">View Doctors</a>
+                <a href="contact.html" class="btn btn-secondary btn-large">Contact Us</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container footer-grid">
+            <div class="footer-brand">
+                <a href="#" class="logo footer-logo">
+                    <i class="ph-fill ph-heartbeat"></i>
+                    <span>Doctor Appointment System</span>
+                </a>
+                <p>Your health is our priority. Book appointments with the best doctors and get quality healthcare services.</p>
+            </div>
+            <div class="footer-links">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="patient_landing.html">Home</a></li>
+                    <li><a href="doctors.html">Doctors</a></li>
+                    <li><a href="appointments.html">My Appointments</a></li>
+                    <li><a href="contact.html">Contact Us</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Doctor Appointment System. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (user) {
+            document.getElementById('authLinks').style.display = 'none';
+            document.getElementById('userLinks').style.display = 'flex';
+        }
+
+        const logout = () => {
+            localStorage.removeItem('user');
+            window.location.reload();
+        }
+    </script>
+</body>
+</html>

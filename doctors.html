@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Doctors - Doctor Appointment System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="patient_styles.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="patient_landing.html" class="logo">
+                <i class="ph-fill ph-heartbeat"></i>
+                <span>MedBook</span>
+            </a>
+            <div class="nav-links" id="authNav">
+                <a href="patient_landing.html" class="nav-link">Home</a>
+                <a href="doctors.html" class="nav-link">Doctors</a>
+                <a href="appointments.html" class="nav-link">My Appointments</a>
+                <a href="contact.html" class="nav-link">Contact</a>
+                <button onclick="logout()" class="btn btn-secondary">Logout</button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="page-header">
+        <div class="container">
+            <h1>Our Specialist Doctors</h1>
+            <p>Find and book an appointment with our highly qualified medical professionals.</p>
+        </div>
+    </div>
+
+    <section class="grid-section">
+        <div class="container">
+            <div class="features-grid" id="doctorsGrid">
+                <!-- Doctors populated via JS -->
+            </div>
+        </div>
+    </section>
+
+    <script>
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (!user) {
+            window.location.href = 'login.html';
+        }
+
+        const logout = () => {
+            localStorage.removeItem('user');
+            window.location.href = 'login.html';
+        }
+
+        const getInitials = (name) => {
+            return name.replace('Dr. ', '').split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+        };
+
+        const loadDoctors = async () => {
+            try {
+                const res = await fetch('api/doctors.php');
+                const data = await res.json();
+                if(data.status === 'success') {
+                    const grid = document.getElementById('doctorsGrid');
+                    data.data.forEach(doc => {
+                        grid.innerHTML += `
+                            <div class="doctor-card">
+                                <div class="doc-avatar-large">
+                                    ${getInitials(doc.name)}
+                                </div>
+                                <div class="doc-info">
+                                    <h3>${doc.name}</h3>
+                                    <p>${doc.specialization} • ${doc.experience} Yrs Exp.</p>
+                                    <a href="book.html?doctor=${encodeURIComponent(doc.name)}" class="btn btn-primary">Book Appointment</a>
+                                </div>
+                            </div>
+                        `;
+                    });
+                }
+            } catch(e) {
+                console.error("Failed to load doctors");
+            }
+        };
+
+        loadDoctors();
+    </script>
+</body>
+</html>
